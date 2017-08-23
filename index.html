@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+<script>
+	var config = {
+		apiKey: "AIzaSyDOXaSH_7_NEvrtUMZg6-L3eJXVIS2jOAI",
+		authDomain: "project1-1d4a2.firebaseapp.com",
+		databaseURL: "https://project1-1d4a2.firebaseio.com",
+		storageBucket: "gs://project1-1d4a2.appspot.com"
+	  };
+	firebase.initializeApp(config);
+	// Get a reference to the database service
+	var database = firebase.database();
+	var data = database.ref("serverData");
+	//always listening
+	data.on("value", function(snapshot) {   //this callback will be invoked with each new object
+		console.log(snapshot.val());		// How to retrive the new added object
+		var idk = snapshot.val()
+		var test = idk.variables.Jesse;
+		console.log(test)
+		}, function (errorObject) {             // if error
+		console.log("The read failed: " + errorObject.code);
+	});
+	
+	
+	
+	
+</script>
+
+
+
+
+<html lang="en">
+  <head>
+	<title>Connected</title>
+  </head>
+  <header class=mdl-layout__header>
+		<div class="mdl-layout__header-row">
+		  <span class="mdl-layout-title">Voting system</span>
+		</div>
+	</header>
+	<main class="mdl-layout__content">
+	<body>
+	<!--form id="login" action="\login"-->
+			<div class="mdl-cell mdl-cell--10-col">
+				<button id="login" type="button" href="/login"class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+					Enter voting Station
+				</button>
+			</div>
+			<!--input type="submit" value="login"-->
+			<p style="color: blue; font-size: 20px;">
+		<!--/form-->
+  
+	<!-- press login -> redirected to "log in page", wait for sensor, if longer 5 seconds, redirect to voting page. else error -->
+  
+  
+  
+	</body>
+</html>
