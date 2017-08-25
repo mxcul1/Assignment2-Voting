@@ -1,37 +1,13 @@
 <!DOCTYPE html>
+<!-- initialise MDL styling -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> 
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+<!-- Initialise connection to firebase --> 
 <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-<script>
-	var config = {
-		apiKey: "AIzaSyDOXaSH_7_NEvrtUMZg6-L3eJXVIS2jOAI",
-		authDomain: "project1-1d4a2.firebaseapp.com",
-		databaseURL: "https://project1-1d4a2.firebaseio.com",
-		storageBucket: "gs://project1-1d4a2.appspot.com"
-	  };
-	firebase.initializeApp(config);
-	// Get a reference to the database service
-	var database = firebase.database();
-	var data = database.ref("serverData");
-	//always listening
-	data.on("value", function(snapshot) {   //this callback will be invoked with each new object
-		console.log(snapshot.val());		// How to retrive the new added object
-		var idk = snapshot.val()
-		var test = idk.variables.Jesse;
-		console.log(test)
-		}, function (errorObject) {             // if error
-		console.log("The read failed: " + errorObject.code);
-	});
-	
-	
-	
-	
-</script>
 
-
-
-
+<!-- main body for html -->
 <html lang="en">
   <head>
 	<title>Connected</title>
@@ -43,19 +19,63 @@
 	</header>
 	<main class="mdl-layout__content">
 	<body>
-	<!--form id="login" action="\login"-->
+	<!-- Login button to start timer when accessed -->
 			<div class="mdl-cell mdl-cell--10-col">
-				<button id="login" type="button" href="/login"class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+				<button id="login" type="button" onclick="redirect()" "class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
 					Enter voting Station
 				</button>
 			</div>
-			<!--input type="submit" value="login"-->
 			<p style="color: blue; font-size: 20px;">
-		<!--/form-->
-  
-	<!-- press login -> redirected to "log in page", wait for sensor, if longer 5 seconds, redirect to voting page. else error -->
-  
-  
-  
+	
+		<!-- press login -> redirected to "log in page", wait for sensor, if longer 5 seconds, redirect to voting page. else error -->
+		<script>
+		var config = {
+			apiKey: "AIzaSyDOXaSH_7_NEvrtUMZg6-L3eJXVIS2jOAI",
+			authDomain: "project1-1d4a2.firebaseapp.com",
+			databaseURL: "https://project1-1d4a2.firebaseio.com",
+			storageBucket: "gs://project1-1d4a2.appspot.com"
+		  };
+		firebase.initializeApp(config);
+		
+		// Get a reference to the database service
+		var db = firebase.database();
+		var data = db.ref("serverData");
+		
+		//always listening
+		data.on("value", function(snapshot) {   //this callback will be invoked with each new object
+			console.log(snapshot.val());		// How to retrive the new added object
+			var idk = snapshot.val()
+			var test = idk.variables.Jesse;
+			console.log(test)
+			}, function (errorObject) {             // if error
+			console.log("The read failed: " + errorObject.code);
+		});
+		//function to choose where voter is directed to after attempting login
+		function redirect()  {
+			var vcaVAl = db.ref("serverData").child("variables").child("CCA");
+			var ccaVAl = db.ref("serverData").child("variables").child("CCA");
+			var alldata = db.ref("serverData");
+			
+			if(vcaVAl > ccaVAl) {
+				console.log("Logged in. Directing to voting page.");
+				ccaVAl.trasaction(function(ccaVAl) {
+					return (ccaVAl || 0) + 1;
+				});
+				document.getElementById("login").href = "/login"
+				}
+			else {
+				console.log("Login unseccesful. Redirecting to error page.");
+				document.getElementById("login").href = "/error"
+				}
+			};
+		</script>
 	</body>
 </html>
+
+
+
+
+
+
+
+
