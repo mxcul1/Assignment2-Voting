@@ -3,18 +3,20 @@ const app = express();
 //const five = require('johnny-five');
 const admin = require("firebase-admin");
 var serviceAccount = require("./serviceAccountKey.json");
-//Initialise database connection
 
+//Initialise database connection
 admin.initializeApp({
   databaseURL: "https://project1-1d4a2.firebaseio.com/",
   credential: admin.credential.cert(serviceAccount)
 });      
 
+//initialise database variables
 var db = admin.database();
 var alldata = db.ref("serverData");
 var vca = db.ref("serverData").child("variables").child("VCA")
+var cca = db.ref("serverData").child("variables").child("CCA")
 
-
+//allow errors to be printed to console
 alldata.on("value", function(snapshot) {
 	console.log(snapshot.val())
 	}, function(errorObject){ 
@@ -22,33 +24,57 @@ alldata.on("value", function(snapshot) {
 });
 
 
-//get board ready 
+//get board ready, and observing
 board.on("ready", function){
 	var pin = 5;
 	var motion = new five.motion(pin);
-	var startTime = 0;
-	var endTime = 0;
 	
+	//initialise start time
 	motion.on("motionStart", function() {
 		var startDate = new Date();
 		var startTime = startDate.getTime();
 		console.log("Motion has started at" + startTime)
 	});
 	
+	//initialise end time
 	motion.on("motionEnd", function() {
 		var endDate = new Date();
 		var endTime = endDate.getTime();
 		console.log("Motion has ended at" + endTime();
 	});
+	
+	//create variable to hold motion time 
+	var motionTime = endTime - startTime
+	
+	//now check to see whether value was short or long motion, using milliseconds
+	if((motionTime > 5000) {
+		console.log("A long motion has been detected.");
+		vca.transaction(function(VCA){
+			return(VCA || 0) + 1 
+		});
+	}
+	else if(motionTime < 5000) && (motionTime > 0) {
+		console.log("A short motion has been detected.");
+			vca.transaction(function(VCA){
+				return(VCA || 0) - 1 
+			});
+			vca.transaction(function(CCA){
+				return(CCA || 0) - 1 
+			});
+	});
+	
 });
 
 
-//alldata.push(20)
-//if long motion
-vca.transaction(function(VCA){
-	return(VCA || 0) + 1 
-})
-//else
-	vca.transaction(function(VCA){
-	return(VCA || 0) - 1 
-})
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
