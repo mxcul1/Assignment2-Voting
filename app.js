@@ -46,27 +46,27 @@ board.on("ready", function(){
 		var endDate = new Date();
 		var endTime = endDate.getTime();
 		console.log("Motion has ended at" + endTime);
-	});
-	
-	//create variable to hold motion time 
-	var motionTime = endTime - startTime
-	
-	//now check to see whether value was short or long motion, using milliseconds
-	if((motionTime > 5000)) {
-		console.log("A long motion has been detected.");
-		vca.transaction(function(VCA){
-			return(VCA || 0) + 1 
-		});
-	}
-	else if((motionTime < 5000)&&(motionTime > 0)) {
-		console.log("A short motion has been detected.");
+		
+		//create variable to hold motion time 
+		var motionTime = endTime - startTime
+		
+		//now check to see whether value was short or long motion, using milliseconds
+		if((motionTime > 5000)) {
+			console.log("A long motion has been detected.");
 			vca.transaction(function(VCA){
-				return(VCA || 0) - 1 
+				return(VCA || 0) + 1 
 			});
-			vca.transaction(function(CCA){
-				return(CCA || 0) - 1 
-			});
-	};
+		}
+		else if((motionTime < 5000)&&(motionTime > 0)) {
+			console.log("A short motion has been detected.");
+				vca.transaction(function(VCA){
+					return(VCA || 0) - 1 
+				});
+				vca.transaction(function(CCA){
+					return(CCA || 0) - 1 
+				});
+		};
+	});
 });
 	
 
