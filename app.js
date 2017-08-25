@@ -1,8 +1,13 @@
+//Initiliase varaibles for server use
 const express = require('express');
 const app = express();
-//const five = require('johnny-five');
 const admin = require("firebase-admin");
 var serviceAccount = require("./serviceAccountKey.json");
+var http = require('http').Server(app);
+
+//initialise board
+var five = require('johnny-five');
+var board = new five.Board();
 
 //Initialise database connection
 admin.initializeApp({
@@ -25,7 +30,7 @@ alldata.on("value", function(snapshot) {
 
 
 //get board ready, and observing
-board.on("ready", function){
+board.on("ready", function(){
 	var pin = 5;
 	var motion = new five.motion(pin);
 	
@@ -40,20 +45,20 @@ board.on("ready", function){
 	motion.on("motionEnd", function() {
 		var endDate = new Date();
 		var endTime = endDate.getTime();
-		console.log("Motion has ended at" + endTime();
+		console.log("Motion has ended at" + endTime);
 	});
 	
 	//create variable to hold motion time 
 	var motionTime = endTime - startTime
 	
 	//now check to see whether value was short or long motion, using milliseconds
-	if((motionTime > 5000) {
+	if((motionTime > 5000)) {
 		console.log("A long motion has been detected.");
 		vca.transaction(function(VCA){
 			return(VCA || 0) + 1 
 		});
 	}
-	else if(motionTime < 5000) && (motionTime > 0) {
+	else if((motionTime < 5000)&&(motionTime > 0)) {
 		console.log("A short motion has been detected.");
 			vca.transaction(function(VCA){
 				return(VCA || 0) - 1 
@@ -61,9 +66,10 @@ board.on("ready", function){
 			vca.transaction(function(CCA){
 				return(CCA || 0) - 1 
 			});
-	});
-	
+	};
 });
+	
+
 
 
 	

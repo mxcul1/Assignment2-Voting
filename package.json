@@ -1,0 +1,18 @@
+{
+  "name": "assignment2",
+  "version": "1.0.0",
+  "description": "Allows johnny five",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.15.4",
+    "firebase": "^4.3.0",
+    "firebase-admin": "^5.2.1",
+    "johnny-five": "^0.11.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Cullen",
+  "license": "ISC"
+}
