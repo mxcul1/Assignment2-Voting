@@ -21,9 +21,9 @@
 	<body>
 	<!-- Login button to start timer when accessed -->
 			<div class="mdl-cell mdl-cell--10-col">
-				<button id="login" type="button" onclick="redirect()" "class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+				<a id="login" type="button" onclick="redirect()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
 					Enter voting Station
-				</button>
+				</a>
 			</div>
 			<p style="color: blue; font-size: 20px;">
 	
@@ -45,29 +45,37 @@
 		data.on("value", function(snapshot) {   //this callback will be invoked with each new object
 			console.log(snapshot.val());		// How to retrive the new added object
 			var idk = snapshot.val()
-			var test = idk.variables.Jesse;
+			var test = idk.variables ;
 			console.log(test)
 			}, function (errorObject) {             // if error
 			console.log("The read failed: " + errorObject.code);
 		});
 		//function to choose where voter is directed to after attempting login
 		function redirect()  {
-			var vcaVAl = db.ref("serverData").child("variables").child("CCA");
+			console.log("Function redirect")
+			var vcaVAl = db.ref("serverData").child("variables").child("VCA");
 			var ccaVAl = db.ref("serverData").child("variables").child("CCA");
 			var alldata = db.ref("serverData");
-			
-			if(vcaVAl > ccaVAl) {
+			return alldata.once("value").then(function(snapshot) {
+				var data = snapshot.val()
+				vca = data.variables.VCA
+				console.log(vca)
+				cca = data.variables.CCA
+				console.log(cca)
+				if(vca > cca) {
 				console.log("Logged in. Directing to voting page.");
-				ccaVAl.trasaction(function(ccaVAl) {
+				ccaVAl.transaction(function(ccaVAl) {
 					return (ccaVAl || 0) + 1;
 				});
-				document.getElementById("login").href = "/login"
+				document.getElementById("login").href = "/voting"
 				}
-			else {
-				console.log("Login unseccesful. Redirecting to error page.");
-				document.getElementById("login").href = "/error"
-				}
-			};
+				else {
+					console.log("Login unseccesful. Redirecting to error page.");
+					document.getElementById("login").href = "/error"
+					}
+			});
+			
+		};
 		</script>
 	</body>
 </html>

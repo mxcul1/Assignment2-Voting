@@ -4,6 +4,8 @@ const app = express();
 const admin = require("firebase-admin");
 var serviceAccount = require("./serviceAccountKey.json");
 var http = require('http').Server(app);
+var router = express.Router();
+
 
 //initialise board
 var five = require('johnny-five');
@@ -68,12 +70,29 @@ board.on("ready", function(){
 		};
 	});
 });
-	
+
+router.use(function(req, res, next){
+	next()
+});
+
+router.get("/", function(req, res){
+	res.sendFile("index.html", {root: __dirname});
+});
 
 
+router.get("/error", function(req, res){
+	res.sendFile("error.html", {root: __dirname});
+});
 
-	
+router.get("/voting", function(req, res){
+	res.sendFile("voting.html", {root: __dirname});
+});
 
+app.use("/", router)
+
+http.listen(8080, function(){
+	console.log("Live at port 8080")
+});
 	
 	
 	
