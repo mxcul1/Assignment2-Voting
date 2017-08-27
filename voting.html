@@ -15,35 +15,23 @@
 	</header>
 	<main class="mdl-layout__content">
 	<body>
-		<p style="color: black; font-size: 20px">
-		Vote for a candidate.
-		</p>
+		<p style="color: black; font-size: 20px">Vote for a candidate.</p>
 		<div class="demo-ribbon"></div>
 		<main class="demo-main mdl-layout__content">
         <div class="demo-container mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
-          <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-		  <div style="width:1920px; margin:0 auto;"></div>
-            <div class="demo-crumbs mdl-color-text--grey-500">
-              Logged in &gt; Voting
-            </div>
-
-            <h3>Please choose someone to vote for, before logging out!</h3>
-              <p>
-			  <p id="jacobID" style="color: black; font-size: 20px;"></p>
-			  <a id="jacobVote" type="button" onclick="incrementJacob()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
-					Vote for Jacob</a>
-			  <p id="jamesID" style="color: black; font-size: 20px;">James</p>
-			  <p id="jesseID" style="color: black; font-size: 20px;">Jesse</p>
-              
-            <!--h3>What to do next?</h3>
-              
-              <p>
-			  <p style="color: black; font-size: 20px;">
-				<a href="/"> Click here to return to logout. </a>
-              </p-->
-              
-          </div>
+		<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+		<div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+		<div style="width:1920px; margin:0 auto;"></div>
+		<div class="demo-crumbs mdl-color-text--grey-500">Logged in &gt; Voting</div>
+		<h3>Please choose someone to vote for, before logging out!</h3>
+			<p id="jacobID" style="color: black; font-size: 20px;"></p>
+			<a id="jacobVote" type="button" onclick="incrementJacob()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">Vote for Jacob</a>
+			<p id="jamesID" style="color: black; font-size: 20px;">James</p>
+			<a id="jamesVote" type="button" onclick="incrementJames()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">Vote for James</a>
+			<p id="jesseID" style="color: black; font-size: 20px;">Jesse</p>
+			<a id="jesseVote" type="button" onclick="incrementJesse()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">Vote for Jesse</a>
+			<a id="logOut" type="button" onclick="logout()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored" style="display:none">Log out</a>
+		  </div>
         </div>
 		
 		
@@ -73,52 +61,85 @@
 		james = data.variables.James
 		jesse = data.variables.Jesse
 		total = james + jacob + jesse
+		
+		<!-- Ensures dividing by 0 does not occur -->
 		if (total == 0) {
 			total = 1
 			}
-		document.getElementById("jacobID").innerHTML = "Jacob 	" + (jacob/total)*100 + "%"
-		document.getElementById("jamesID").innerHTML = "James	" + (james/total)*100 + "%"
-		document.getElementById("jesseID").innerHTML = "Jesse	" + (jesse/total)*100 + "%"
+		document.getElementById("jacobID").innerHTML = "Jacob 	" + Math.round((jacob/total)*100,4) + "%"
+		document.getElementById("jamesID").innerHTML = "James	" + Math.round((james/total)*100,4) + "%"
+		document.getElementById("jesseID").innerHTML = "Jesse	" + Math.round((jesse/total)*100,4) + "%"
 
 		console.log("Values have been shown.")
 	});        
 	
-	
 	function incrementJacob()   {
-		var alldata = db.ref("serverData");
+		console.log("Incrementing Jacob")
+		jacobVote.style.display = "none";
+		jamesVote.style.display = "none";
+		jesseVote.style.display = "none";
+		logOut.style.display= "inline";
 		return alldata.once("value").then(function(snapshot) {
 			jacobVAL.transaction(function(jacobVAL) {
 						return (jacobVAL || 0) + 1;
-					});
-			//console.log("jacob")
-			/*
-			console.log("Function redirect")
-			var vcaVAL = db.ref("serverData").child("variables").child("VCA");
-			var ccaVAL = db.ref("serverData").child("variables").child("CCA");
-			var alldata = db.ref("serverData");
-			return alldata.once("value").then(function(snapshot) {
-				var data = snapshot.val()
-				vca = data.variables.VCA
-				console.log(vca)
-				cca = data.variables.CCA
-				console.log(cca)
-				if(vca > cca) {
-				console.log("Logged in. Directing to voting page.");
-				ccaVAL.transaction(function(ccaVAL) {
-					return (ccaVAL || 0) + 1;
-				});
-				document.getElementById("login").href = "/voting"
-				}
-				else {
-					console.log("Login unseccesful. Redirecting to error page.");
-					document.getElementById("login").href = "/error"
-					}
-			*/
 			});
-			
-			
-		};
-
+			ccaVAL.transaction(function(ccaVAL) {
+					return (ccaVAL || 0) - 1;
+				});
+		});
+	};
+	
+	function incrementJesse()   {
+		console.log("Incrementing Jesse")
+		jacobVote.style.display = "none";
+		jamesVote.style.display = "none";
+		jesseVote.style.display = "none";
+		logOut.style.display= "inline";
+		return alldata.once("value").then(function(snapshot) {
+			jesseVAL.transaction(function(jesseVAL) {
+						return (jesseVAL || 0) + 1;
+			});
+			ccaVAL.transaction(function(ccaVAL) {
+					return (ccaVAL || 0) - 1;
+				});
+		});
+	};
+	
+	function incrementJames()   {
+		console.log("Incrementing James")
+		jacobVote.style.display = "none";
+		jamesVote.style.display = "none";
+		jesseVote.style.display = "none";
+		logOut.style.display= "inline";
+		return alldata.once("value").then(function(snapshot) {
+			jamesVAL.transaction(function(jamesVAL) {
+						return (jamesVAL || 0) + 1;
+			});
+			ccaVAL.transaction(function(ccaVAL) {
+					return (ccaVAL || 0) - 1;
+				});
+		});
+	};
+	
+	function logout() {
+		console.log("Logging out")
+		return alldata.once("value").then(function(snapshot) {
+			var data = snapshot.val()
+			cca = data.variables.CCA
+			vca = data.variables.VCA
+			if(vca > cca) {
+			console.log("Logged in. Directing to voting page.");
+			vcaVAL.transaction(function(vcaVAL) {
+				return (vcaVAL || 0) - 1;
+			});
+			document.getElementById("logOut").href = "/"
+			}
+			else {
+				console.log("Login unseccesful. Redirecting to error page.");
+				document.getElementById("login").href = "/error"
+				}
+		});
+	};
 	
 	</script>
 </html>

@@ -64,9 +64,11 @@ board.on("ready", function(){
 				vca.transaction(function(VCA){
 					return(VCA || 0) - 1 
 				});
-				vca.transaction(function(CCA){
+				/*
+				cca.transaction(function(CCA){
 					return(CCA || 0) - 1 
 				});
+				*/
 		};
 	});
 });
