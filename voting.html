@@ -31,7 +31,8 @@
             <h3>Please choose someone to vote for, before logging out!</h3>
               <p>
 			  <p id="jacobID" style="color: black; font-size: 20px;"></p>
-			  <!--a >  </a-->
+			  <a id="jacobVote" type="button" onclick="incrementJacob()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+					Vote for Jacob</a>
 			  <p id="jamesID" style="color: black; font-size: 20px;">James</p>
 			  <p id="jesseID" style="color: black; font-size: 20px;">Jesse</p>
               
@@ -61,11 +62,11 @@
 	// Get a reference to the database service
 	var db = firebase.database();
 	var alldata = db.ref("serverData");
-	var vcaVAl = db.ref("serverData").child("variables").child("VCA");
-	var ccaVAl = db.ref("serverData").child("variables").child("CCA");	
-	var jacobVAl = db.ref("serverData").child("variables").child("Jacob");
-	var jamesVAl = db.ref("serverData").child("variables").child("James");
-	var jesseVAl = db.ref("serverData").child("variables").child("Jesse");
+	var vcaVAL = db.ref("serverData").child("variables").child("VCA");
+	var ccaVAL = db.ref("serverData").child("variables").child("CCA");	
+	var jacobVAL = db.ref("serverData").child("variables").child("Jacob");
+	var jamesVAL = db.ref("serverData").child("variables").child("James");
+	var jesseVAL = db.ref("serverData").child("variables").child("Jesse");
 	alldata.on("value", function(snapshot) {
 		data = snapshot.val();
 		jacob = data.variables.Jacob
@@ -80,8 +81,43 @@
 		document.getElementById("jesseID").innerHTML = "Jesse	" + (jesse/total)*100 + "%"
 
 		console.log("Values have been shown.")
-	});
-
+	});        
+	
+	
+	function incrementJacob()   {
+		var alldata = db.ref("serverData");
+		return alldata.once("value").then(function(snapshot) {
+			jacobVAL.transaction(function(jacobVAL) {
+						return (jacobVAL || 0) + 1;
+					});
+			//console.log("jacob")
+			/*
+			console.log("Function redirect")
+			var vcaVAL = db.ref("serverData").child("variables").child("VCA");
+			var ccaVAL = db.ref("serverData").child("variables").child("CCA");
+			var alldata = db.ref("serverData");
+			return alldata.once("value").then(function(snapshot) {
+				var data = snapshot.val()
+				vca = data.variables.VCA
+				console.log(vca)
+				cca = data.variables.CCA
+				console.log(cca)
+				if(vca > cca) {
+				console.log("Logged in. Directing to voting page.");
+				ccaVAL.transaction(function(ccaVAL) {
+					return (ccaVAL || 0) + 1;
+				});
+				document.getElementById("login").href = "/voting"
+				}
+				else {
+					console.log("Login unseccesful. Redirecting to error page.");
+					document.getElementById("login").href = "/error"
+					}
+			*/
+			});
+			
+			
+		};
 
 	
 	</script>
