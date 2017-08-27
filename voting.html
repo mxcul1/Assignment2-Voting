@@ -6,7 +6,7 @@
 
 <html lang="en">
   <head>
-	<title>Signing in...</title>
+	<title>Voting</title>
   </head>
   <header class=mdl-layout__header>
 		<div class="mdl-layout__header-row">
@@ -16,16 +16,40 @@
 	<main class="mdl-layout__content">
 	<body>
 		<p style="color: black; font-size: 20px">
-		Please wait, and you will be signed in...
+		Vote for a candidate.
 		</p>
+		<div class="demo-ribbon"></div>
+		<main class="demo-main mdl-layout__content">
+        <div class="demo-container mdl-grid">
+          <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+          <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+		  <div style="width:1920px; margin:0 auto;"></div>
+            <div class="demo-crumbs mdl-color-text--grey-500">
+              Logged in &gt; Voting
+            </div>
+
+            <h3>Please choose someone to vote for, before logging out!</h3>
+              <p>
+			  <p id="jacobID" style="color: black; font-size: 20px;"></p>
+			  <!--a >  </a-->
+			  <p id="jamesID" style="color: black; font-size: 20px;">James</p>
+			  <p id="jesseID" style="color: black; font-size: 20px;">Jesse</p>
+              
+            <!--h3>What to do next?</h3>
+              
+              <p>
+			  <p style="color: black; font-size: 20px;">
+				<a href="/"> Click here to return to logout. </a>
+              </p-->
+              
+          </div>
+        </div>
+		
+		
+		
 	</body>
-	 <script>
+	<script>
     // Initialize Firebase
-    var config = {
-        databaseURL: "https://project1-1d4a2.firebaseio.com/",
-    };
-    firebase.initializeApp(config);
-	database.ref(SignIn).push().set({SignIn: })
 	var config = {
 			apiKey: "AIzaSyDOXaSH_7_NEvrtUMZg6-L3eJXVIS2jOAI",
 			authDomain: "project1-1d4a2.firebaseapp.com",
@@ -36,9 +60,29 @@
 		
 	// Get a reference to the database service
 	var db = firebase.database();
-	
-	
-	
+	var alldata = db.ref("serverData");
+	var vcaVAl = db.ref("serverData").child("variables").child("VCA");
+	var ccaVAl = db.ref("serverData").child("variables").child("CCA");	
+	var jacobVAl = db.ref("serverData").child("variables").child("Jacob");
+	var jamesVAl = db.ref("serverData").child("variables").child("James");
+	var jesseVAl = db.ref("serverData").child("variables").child("Jesse");
+	alldata.on("value", function(snapshot) {
+		data = snapshot.val();
+		jacob = data.variables.Jacob
+		james = data.variables.James
+		jesse = data.variables.Jesse
+		total = james + jacob + jesse
+		if (total == 0) {
+			total = 1
+			}
+		document.getElementById("jacobID").innerHTML = "Jacob 	" + (jacob/total)*100 + "%"
+		document.getElementById("jamesID").innerHTML = "James	" + (james/total)*100 + "%"
+		document.getElementById("jesseID").innerHTML = "Jesse	" + (jesse/total)*100 + "%"
+
+		console.log("Values have been shown.")
+	});
+
+
 	
 	</script>
 </html>
