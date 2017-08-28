@@ -9,13 +9,13 @@ var router = express.Router();
 
 //initialise board
 var five = require('johnny-five');
-var board = new five.Board();
+var board = new five.Board({port: "COM3"});
 
 //Initialise database connection
 admin.initializeApp({
   databaseURL: "https://project1-1d4a2.firebaseio.com/",
   credential: admin.credential.cert(serviceAccount)
-});      
+});
 
 //initialise database variables
 var db = admin.database();
@@ -26,8 +26,8 @@ var cca = db.ref("serverData").child("variables").child("CCA")
 //allow errors to be printed to console
 alldata.on("value", function(snapshot) {
 	console.log(snapshot.val())
-	}, function(errorObject){ 
-	console.log("Failed" + errorObject.code) 
+	}, function(errorObject){
+	console.log("Failed" + errorObject.code)
 });
 
 
@@ -35,40 +35,40 @@ alldata.on("value", function(snapshot) {
 board.on("ready", function(){
 	var pin = 7;
 	var motion = new five.Motion(pin);
-	
+
+  // "calibrated" occurs once, at the beginning of a session,
+  motion.on("calibrated", function() {
+    console.log("calibrated");
+  });
+
 	//initialise start time
-	motion.on("motionStart", function() {
-		var startDate = new Date();
-		var startTime = startDate.getTime();
+	motion.on("motionstart", function() {
+		startDate = new Date();
+		startTime = startDate.getTime();
 		console.log("Motion has started at" + startTime)
 	});
-	
+
 	//initialise end time
-	motion.on("motionEnd", function() {
-		var endDate = new Date();
-		var endTime = endDate.getTime();
+	motion.on("motionend", function() {
+		endDate = new Date();
+		endTime = endDate.getTime();
 		console.log("Motion has ended at" + endTime);
-		
-		//create variable to hold motion time 
-		var motionTime = endTime - startTime
-		
+
+		//create variable to hold motion time
+		motionTime = endTime - startTime
+
 		//now check to see whether value was short or long motion, using milliseconds
 		if((motionTime > 5000)) {
 			console.log("A long motion has been detected.");
 			vca.transaction(function(VCA){
-				return(VCA || 0) + 1 
+				return(VCA || 0) + 1
 			});
 		}
 		else if((motionTime < 5000)&&(motionTime > 0)) {
 			console.log("A short motion has been detected.");
 				vca.transaction(function(VCA){
-					return(VCA || 0) - 1 
+					return(VCA || 0) - 1
 				});
-				/*
-				cca.transaction(function(CCA){
-					return(CCA || 0) - 1 
-				});
-				*/
 		};
 	});
 });
@@ -95,13 +95,3 @@ app.use("/", router)
 http.listen(8080, function(){
 	console.log("Live at port 8080")
 });
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

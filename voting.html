@@ -127,16 +127,13 @@
 			var data = snapshot.val()
 			cca = data.variables.CCA
 			vca = data.variables.VCA
-			if(vca > cca) {
-			console.log("Logged in. Directing to voting page.");
-			vcaVAL.transaction(function(vcaVAL) {
-				return (vcaVAL || 0) - 1;
-			});
+			if(vca >= cca) {
+			console.log("Logging out. Directing to login page.");
 			document.getElementById("logOut").href = "/"
 			}
 			else {
 				console.log("Login unseccesful. Redirecting to error page.");
-				document.getElementById("login").href = "/error"
+				document.getElementById("logOut").href = "/error"
 				}
 		});
 	};
