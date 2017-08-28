@@ -9,7 +9,7 @@ var router = express.Router();
 
 //initialise board
 var five = require('johnny-five');
-var board = new five.Board({port: "COM3"});
+var board = new five.Board();
 
 //Initialise database connection
 admin.initializeApp({
