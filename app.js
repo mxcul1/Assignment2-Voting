@@ -34,7 +34,7 @@ alldata.on("value", function(snapshot) {
 //get board ready, and observing
 board.on("ready", function(){
 	var pin = 7;
-	var motion = new five.motion(pin);
+	var motion = new five.Motion(pin);
 	
 	//initialise start time
 	motion.on("motionStart", function() {
